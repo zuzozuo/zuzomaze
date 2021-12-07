@@ -6,6 +6,9 @@ class Cell:
         self.y = y #rows
         self.w = width
         self.h = height
+        self.visited = False
+        self.walls = [True, True, True, True] #top right bottom left
+
 
 
     

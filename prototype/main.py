@@ -8,7 +8,7 @@ CELL_WIDTH = 100
 CELL_HEIGHT = 100
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 800
-BORDER_THICKNESS = 1
+BORDER_THICKNESS = 2
 ROWS = (int)(WINDOW_HEIGHT // CELL_HEIGHT)
 COLS = (int)(WINDOW_WIDTH // CELL_WIDTH)
 
@@ -21,7 +21,7 @@ cells = map.init_cells()
 
 #-----------------------------------------------
 pygame.init()  
-surface = pygame.display.set_mode((WINDOW_WIDTH + 3, WINDOW_HEIGHT + 3))
+surface = pygame.display.set_mode((WINDOW_WIDTH + 3, WINDOW_HEIGHT + 10))
 color = (255,0,0)
 blue = (0,0,255)
 running = True
@@ -38,17 +38,21 @@ while running:
         x = cells[i].x
         y = cells[i].y
 
-        #top line
-        pygame.draw.line(surface, color, (x * CELL_WIDTH, y * CELL_WIDTH),                     ((x * CELL_WIDTH) + CELL_WIDTH, y * CELL_HEIGHT), BORDER_THICKNESS)
+    #top line
+        if(cells[i].walls[0]):
+            pygame.draw.line(surface, color, (x * CELL_WIDTH, y * CELL_WIDTH),                     ((x * CELL_WIDTH) + CELL_WIDTH, y * CELL_HEIGHT), BORDER_THICKNESS)
 
-        #right line
-        pygame.draw.line(surface, color, ((x * CELL_WIDTH) + CELL_WIDTH  , y * CELL_HEIGHT),   ((x * CELL_WIDTH) + CELL_WIDTH , (y * CELL_HEIGHT) + CELL_HEIGHT), BORDER_THICKNESS)
+    #right line
+        if(cells[i].walls[1]):
+            pygame.draw.line(surface, color, ((x * CELL_WIDTH) + CELL_WIDTH  , y * CELL_HEIGHT),   ((x * CELL_WIDTH) + CELL_WIDTH , (y * CELL_HEIGHT) + CELL_HEIGHT), BORDER_THICKNESS)
 
-        #bottom line
-        pygame.draw.line(surface, color, (x * CELL_WIDTH , y * CELL_HEIGHT),                   ((x * CELL_WIDTH) + CELL_WIDTH,  y * CELL_HEIGHT),  BORDER_THICKNESS)
+    #bottom line
+        if(cells[i].walls[2]):
+            pygame.draw.line(surface, color, (x * CELL_WIDTH , (y * CELL_HEIGHT) + CELL_HEIGHT),                   ((x * CELL_WIDTH) + CELL_WIDTH,  (y * CELL_HEIGHT) + CELL_HEIGHT),  BORDER_THICKNESS)
 
-        #left line
-        pygame.draw.line(surface, color, (x * CELL_WIDTH , y * CELL_HEIGHT),                   (x * CELL_WIDTH , (y  * CELL_HEIGHT) + CELL_HEIGHT) , BORDER_THICKNESS)
+    #left line
+        if(cells[i].walls[3]):
+            pygame.draw.line(surface, color, (x * CELL_WIDTH , y * CELL_HEIGHT),                   (x * CELL_WIDTH , (y  * CELL_HEIGHT) + CELL_HEIGHT) , BORDER_THICKNESS)
 
        
 
