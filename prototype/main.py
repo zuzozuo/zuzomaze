@@ -4,8 +4,8 @@ from cell import Cell
 from map import Map
 
 #-------------------------------------
-CELL_WIDTH = 100
-CELL_HEIGHT = 100
+CELL_WIDTH = 20
+CELL_HEIGHT = 20
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 800
 BORDER_THICKNESS = 2

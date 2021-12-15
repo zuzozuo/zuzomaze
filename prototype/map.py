@@ -16,7 +16,7 @@ class Map():
         return self.cells
     
     def index(self, x, y): #przerabia 2D na 1D list
-        if (x < 0 or y < 0 or x > self.cols or y > self.rows):
+        if (x < 0 or y < 0 or x > self.cols-1 or y > self.rows-1):
             return None
 
         return x + y * self.cols 
