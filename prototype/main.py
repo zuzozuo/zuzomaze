@@ -51,6 +51,8 @@ def generate_maze(cells, current):
     next = current.checkNeighbors(top, right, bottom, left)
     if (next is not None):
         next.visited = True
+        map.removeWalls(current, next)
+
         return generate_maze(cells, next)
 
     return None

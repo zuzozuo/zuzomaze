@@ -30,4 +30,17 @@ class Cell:
             return neigh[random.randint(0,len(neigh)-1)]
         else:
             return None
+
+    def removeTopWall(self):
+        self.walls[0] = False
+    
+    def removeRightWall(self):
+        self.walls[1] = False
+
+    def removeBottomWall(self):
+        self.walls[2] = False
+
+    def removeLeftWall(self):
+        self.walls[3] = False
+
         

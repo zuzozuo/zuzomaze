@@ -15,16 +15,34 @@ class Map():
         
         return self.cells
     
-    def index(self, x, y): #przerabia 2D na 1D list
+    def index(self, x, y): #changes 2D list indexes into 1D list indexes
         if (x < 0 or y < 0 or x > self.cols-1 or y > self.rows-1):
             return None
 
         return x + y * self.cols 
 
     
-    def generate_maze(self):
-        current = self.cells[0] #our starting point, can be randomized later
-        current.visited = True
+    def removeWalls(self,c_a, c_b): #args of Cell type
+        x = c_a.x - c_b.x #diffrence between x coords to check which wall to delete (right/left)
+        y = c_a.y - c_b.y #diffrence between x coords to check which wall to delete (right/left)
+
+        if (x == 1):
+            c_a.removeLeftWall()
+            c_b.removeRightWall()
+
+        elif (x == -1):
+            c_a.removeRightWall()
+            c_b.removeLeftWall()
+
+        if (y == 1):
+            c_a.removeTopWall()
+            c_b.removeBottomWall()
+        elif (y == -1):
+            c_a.removeBottomWall()
+            c_b.removeTopWall()
+
+
+        
 
 
         
