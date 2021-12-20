@@ -9,6 +9,7 @@ class Cell:
         self.h = height
         self.visited = False
         self.walls = [True, True, True, True] #top right bottom left
+        self.isCurrent = False
 
 
     def checkNeighbors(self, top, right, bottom, left): #these are neighbouring cells
@@ -26,10 +27,7 @@ class Cell:
         if (left is not None) and (not left.visited):
             neigh.append(left)
 
-        if (len(neigh) > 0):
-            return neigh[random.randint(0,len(neigh)-1)]
-        else:
-            return None
+        return neigh
 
     def removeTopWall(self):
         self.walls[0] = False

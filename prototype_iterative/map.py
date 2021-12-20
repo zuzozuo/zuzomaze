@@ -7,6 +7,7 @@ class Map():
         self.c_w = c_w
         self.c_h = c_h
         self.cells = []
+        self.stack = []
 
     def init_cells(self):
         for y in range(0, self.rows ):
