@@ -46,8 +46,8 @@ def find_neigh(y, x, maze): #x cols y rows
 def solve_maze(maze):
     queue = []
     visited = []
-    start = (1,1) #na poczatek
-    finish = (1,5)
+    start = (1,1) #starting point
+    finish = (1,5) #goal
 
     #initialize backtrace list
     backtrace = {}
