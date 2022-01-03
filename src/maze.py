@@ -11,10 +11,6 @@ class Cell():
         self.walls = WALL_TOP + WALL_RIGHT + WALL_BOTTOM + WALL_LEFT + CELL_NOT_VISITED
         self.x = x  #x = id - (id // width) * width  np y = 93 - (93 /10 ) * 10 = 3 X -> COL NUMBER
         self.y = y  #y = id // maze_width - np x = 9 / 10 = 0  Y-> ROW NUMBER
-        self.is_start = False
-        self.is_goal = False
-        self.bfs_visit = False #for colouring
-        self.bfs_path = False #for colouring
 
 
 class Maze():
@@ -127,109 +123,17 @@ class Maze():
 
 
 
-# #----------------------------------
-#  def randomize_endpoints(self): #selects start and endpoint randomly
-#     #start cell index
-#         s_c = 0 
-#     #goal cell index
-#         g_c = random.randint(int((len(self.cells)/4) * 3), len(self.cells)-1)
+#----------------------------------
+def randomize_endpoints(self): #selects start and endpoint randomly
+    #start cell index
+        s_c = 0 
+    #goal cell index
+        g_c = random.randint(int((len(self.cells)/4) * 3), len(self.cells)-1)
 
-#         self.cells[s_c].is_start = True
-#         self.cells[g_c].is_goal = True 
+        self.cells[s_c].walls |= CELL_IS_START
+        self.cells[g_c].walls |= CELL_IS_GOAL
 
-#         return(s_c, g_c)
+        return(s_c, g_c)
 
-
-#     def solve_maze(self): #bfs
-
-#         queue = []
-#         visited = []
-#         neighbours= []
-#         backtrace = {}
-    
-#     #initializing enpoints
-#         s_c, g_c = self.randomize_endpoints() 
-#         start = self.cells[s_c]
-#         goal = self.cells[g_c]
-
-#         print(start.id)
-#         print(goal.id)
-    
-#     #reset visit flags for neighbour searching
-#         self.reset_visit_flag()
-
-#         queue.append(start)
-
-#         while(len(queue) > 0):
-#             current = queue.pop(0)
-#             #print(len(queue))
-
-#             if current.id == goal.id:
-#                 print("Reached the Goal")
-#                 break
-            
-
-#             #checking neighbours
-#             x = current.x
-#             y = current.y
-
-#             #top
-#             if(y > 0 and ~(current.walls & WALL_TOP) and ~(self.cells[current.id - self.width].walls & WALL_TOP)):
-#                 neighbours.append(self.cells[current.id - self.width])
-
-#             #right
-#             if (( x < self.width -1 ) and ~(current.walls & WALL_RIGHT)  and ~(self.cells[current.id + 1].walls & WALL_RIGHT)):
-#                 neighbours.append(self.cells[current.id + 1 ])
-
-            
-#             #bottom
-#             if ( y < (self.height - 1) )  and ~(current.walls & WALL_BOTTOM) and ~(self.cells[current.id + self.width].walls & WALL_BOTTOM ):
-#                 neighbours.append(self.cells[current.id + self.width])
-
-
-#             #left
-#             if( ( x > 0 )  and ~(current.walls & WALL_LEFT) and ~(self.cells[current.id - 1].walls & WALL_LEFT)):
-#                 neighbours.append(self.cells[current.id - 1])
-
-#             #------------------------
-#             for i in range(0, len(neighbours)):
-#                 check = neighbours[i]
-
-#                 if(~(neighbours[i].walls & CELL_VISITED)):
-#                     neighbours[i].walls |= CELL_VISITED
-#                     backtrace[str(check.id)] = current.id
-#                     queue.append(check)
-
-#             neighbours_id = [cell.id for cell in neighbours]
-#             print("Current id: " + str(current.id) + " x: " + str(x) + " y: " + str(y))
-#             print("Neighbours: " + str(neighbours_id))
-            
-#             neighbours = []
-        
-
-#         # if(current.id == goal.id):
-#         #     path = [goal]
-#         #     current = goal
-#         #     print(current.id)
-#         #     print(start.id)
-#         #     print("==")
-#         #     print(backtrace)
-#         #   #  while(current.id != start.id):
-#         #   #      current = backtrace[str(current.id)]
-#         #   #      path.insert(0, current)
-#         #   #      print(path)
-
-            
-#         #     if(len(path) > 2):
-#         #         for i in range(0, len(path)):
-#         #             print(path)
-#         #             self.cells[path[i].id].walls |=CELL_BFS_PATH
-#         #     print("Supcio!")
-
-#             #neighbours = self.check_neighbours(self.cells[current]) """
-
-            
-
-                
 
 
