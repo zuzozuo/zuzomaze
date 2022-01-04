@@ -142,14 +142,6 @@ class Maze():
         y = current.y
         neighbours = []
 
-        # has_t_w = current.walls & WALL_TOP
-        # has_b_w = self.cells[current.id - self.rows].walls & WALL_BOTTOM
-        # print(str(bin(current.walls)))
-        # print(str(bin(self.cells[current.id - self.rows].walls)))
-        # print(str(bin(has_t_w)))
-        # print(str(bin(has_b_w)))
-        # print(str(bin(has_t_w & has_b_w)))
-        # print(str(bin(~(has_t_w & has_b_w))))
         #TOP
         if ( y > 0 ) and not((self.cells[current.id - self.rows].walls & WALL_BOTTOM) or (current.walls & WALL_TOP)):
             neighbours.append(self.cells[current.id  - self.rows ])
@@ -168,14 +160,13 @@ class Maze():
 
         return neighbours
 
-    def find_path(self):
+    def find_path(self): #TO EDIT!
         s_c, g_c = self.randomize_endpoints()
         start = self.cells[s_c]
         goal = self.cells[g_c]
         queue = deque()
         searched = []
         backtrace = {}
-#try to do it on ids and then generate proper flags maybe?
 
         queue.append(start.id)
 
@@ -196,14 +187,11 @@ class Maze():
                     queue.append(check)
 
         
-
-        
-            print("Current: " + str(current))
-            print("Neighbours: " + str([neighbour.id for neighbour in neighbours]))
+            #print("Current: " + str(current))
+            #print("Neighbours: " + str([neighbour.id for neighbour in neighbours]))
         
         
         if(current == goal.id):
-            print(backtrace)
             path = [goal.id]
             current = goal.id
 
@@ -213,20 +201,9 @@ class Maze():
 
             for i in path:
                 self.cells[i].walls |= CELL_BFS_PATH
-                print(str(bin(self.cells[i].walls & CELL_BFS_PATH)))
-            
-            print(path)
-            
-
-            print("Woohoe!")
+                    
+            return True
             
         else:
-            print("Brak trasy")
+            return False
         
-
-
-
-
-
-
-
