@@ -1,4 +1,4 @@
-from consts import *
+from consts import W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, CELL_NOT_VISITED
 
 
 class Cell():
@@ -6,7 +6,7 @@ class Cell():
         self.width = width
         self.height = height
         self.id = id
-        self.walls = WALL_TOP | WALL_RIGHT | WALL_BOTTOM | WALL_LEFT | CELL_NOT_VISITED
+        self.walls = W_TOP | W_RIGHT | W_BOTTOM | W_LEFT | CELL_NOT_VISITED
 
     # x = id - (id // width) * width : y = 93 - (93 /10 ) * 10 = 3 X -> COL NUM
         self.x = x
