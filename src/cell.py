@@ -2,9 +2,8 @@ from consts import W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, CELL_NOT_VISITED
 
 
 class Cell():
-    def __init__(self, width, height, id, x, y):
-        self.width = width
-        self.height = height
+    def __init__(self, size, id, x, y):
+        self.size = size  # size for drawing imgs
         self.id = id
         self.walls = W_TOP | W_RIGHT | W_BOTTOM | W_LEFT | CELL_NOT_VISITED
 

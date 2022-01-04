@@ -1,6 +1,6 @@
 import random
 from cell import Cell
-from consts import (CELL_WIDTH, CELL_HEIGHT, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
+from consts import (CELL_SIZE, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
                     CELL_VISITED, CELL_START, CELL_GOAL, CELL_PATH)
 
 
@@ -8,7 +8,7 @@ class Maze():
     def __init__(self, rows, cols, start):
         self.rows = rows
         self.cols = cols
-        self.cells = [Cell(CELL_WIDTH, CELL_HEIGHT, i,
+        self.cells = [Cell(CELL_SIZE, i,
                       (i - (i // rows) * rows), (i // rows)) for i in range(0, (rows * cols))]
 
         self.stack = [self.cells[start]]
@@ -22,7 +22,7 @@ class Maze():
             walls = str(bin(cell.walls))
             print("id: {} x: {} y: {} wall: {}".format(cell.id, cell.x, cell.y, walls))
 
-# --------------BINARY PREVIEW OF GENERATED MAZE - WITHOUT BFS!
+# ------------- BINARY PREVIEW OF GENERATED MAZE - WITHOUT BFS!
     def display_maze(self):
 
         current = self.cells[0].id
@@ -43,7 +43,7 @@ class Maze():
         for line in self.finished_maze:
             print(line)
 
-# --------------- REVERSE BACKTRACKING MAZE GENERATION
+# ------------- REVERSE BACKTRACKING MAZE GENERATION
     def check_neighbours(self, current):
         neighbours = []
         x = current.x
@@ -107,11 +107,11 @@ class Maze():
                 self.cells[visit.id].walls |= CELL_VISITED
                 self.stack.append(visit)
 
-# -----------------------HELPERS
+# ------------- HELPERS
     def get_cells(self):
         return self.cells
 
-# --------------------BFS SHORTEST PATH SEARCH
+# ------------- BFS SHORTEST PATH SEARCH
     def randomize_endpoints(self):   # selects start and endpoint id randomly
         # start cell index
         s_c = self.start
@@ -173,9 +173,6 @@ class Maze():
                     # how did we get to the next cell?
                     backtrace[check] = current
                     queue.append(check)
-
-            # print("Current: " + str(current))
-            # print("Neighbours: " + str([neighbour.id for neighbour in neighbours]))
 
         if (current == goal):
             path = [goal]

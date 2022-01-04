@@ -3,18 +3,19 @@ from consts import (MAZE_WIDTH, MAZE_HEIGHT, CELL_SIZE, IMG_MARGIN, FONT_SIZE,
                     C_BLACK, C_VISITED_2, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT)
 from maze import Maze
 from PIL import Image, ImageDraw, ImageFont
+import random, string
 
 
-def draw_image(cells, rows, cols):
-    size_x = rows * CELL_SIZE + IMG_MARGIN * 2  # ROWS - DRAWING FROM LEFT TO RIGHT
-    size_y = cols * CELL_SIZE + IMG_MARGIN * 2  # COLS - DRAWING FROM UP TO DOWN
+def draw_image(cells, rows, cols, name):
+    size_x = rows * CELL_SIZE + IMG_MARGIN * 2  # ROWS - DRAWING FROM L TO R
+    size_y = cols * CELL_SIZE + IMG_MARGIN * 2  # COLS - DRAWING FROM U TO D
     img = Image.new('RGB', (size_x, size_y))
     draw = ImageDraw.Draw(img)
     txt_font = ImageFont.truetype("arial.ttf", FONT_SIZE)
 
     curr_pos = 0
-    x = IMG_MARGIN  # startposition
-    y = IMG_MARGIN  # startposition
+    x = IMG_MARGIN  # start
+    y = IMG_MARGIN  # start
 
     for posy in range(0, cols):
         for posx in range(0, rows):
@@ -51,19 +52,27 @@ def draw_image(cells, rows, cols):
         y += CELL_SIZE
 
     img.show()
-    img.save("test.png")
-
+    img.save(name + "_maze.png")
 
 # -------------------------------------------------------
+# ----------------- MAIN
 
-test = Maze(MAZE_WIDTH, MAZE_HEIGHT, 0)
-test.generate()
-test.find_path()
-print("---------------------------------------------")
-cells = test.get_cells()
-# test.display_cells()
-# test.display_maze()
+print("################################################")
+print("#                 W E L C O M E                #")
+print("#            I AM IMAGE MAZE GENERATOR         #")
+print("# I can generate, solve and draw maze for you! #")
+print("#            Project name: zuzomaze            #")
+print("#           Author (github): zuzozuo           #")
+print("#            It's aMAZEing  adventure!         #")
+print("################################################")
 
-draw_image(cells, MAZE_WIDTH, MAZE_HEIGHT)
+
+aMAZEing = Maze(MAZE_WIDTH, MAZE_HEIGHT, 0)
+aMAZEing.generate()
+aMAZEing.find_path()
+cells = aMAZEing.get_cells()
+
+random_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 7))  
+draw_image(cells, MAZE_WIDTH, MAZE_HEIGHT, random_name)
 
 # EoF
