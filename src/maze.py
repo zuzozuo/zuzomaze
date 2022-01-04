@@ -1,33 +1,23 @@
 import random
 from consts import *
-from collections import deque
-
-class Cell():
-    def __init__(self, width, height, id, x, y):
-        self.width = width
-        self.height = height
-        self.id = id
-        self.walls = WALL_TOP + WALL_RIGHT + WALL_BOTTOM + WALL_LEFT + CELL_NOT_VISITED
-        self.x = x  #x = id - (id // width) * width  np y = 93 - (93 /10 ) * 10 = 3 X -> COL NUMBER
-        self.y = y  #y = id // maze_width - np x = 9 / 10 = 0  Y-> ROW NUMBER
-        self.bfs_step_num = "x"
+from cell import Cell
 
 
 class Maze():
     def __init__(self, rows, cols, start):
         self.rows = rows
         self.cols = cols
-        self.cells = [Cell (CELL_WIDTH, CELL_HEIGHT, i,  (i - (i // rows) * rows), (i // rows)) for i in range(0, (rows * cols))]
+        self.cells = [Cell(CELL_WIDTH, CELL_HEIGHT, i,  (i - (i // rows) * rows), (i // rows)) for i in range(0, (rows * cols))]
         self.stack = [self.cells[start]]
         self.finished_maze = []
-        
-        
-#------------- DISPLAY METHODS
+        self.start = start
+
+# ------------- DISPLAY METHODS
     def display_cells(self):
         for cell in self.cells:
             print("id: " + str(cell.id) + " x: " + str(cell.x) + " y: " + str(cell.y) + " wall_value: " + str(bin(cell.walls)))
 
-#--------------TO_EDIT
+# --------------TO_EDIT
     def display_maze(self):
 
         current = self.cells[0].id
@@ -48,61 +38,59 @@ class Maze():
         for line in self.finished_maze:
             print(line)
 
-#--------------- REVERSE BACKTRACKING MAZE GENERATION
-    
+# --------------- REVERSE BACKTRACKING MAZE GENERATION
     def check_neighbours(self, current):
         neighbours = []
         x = current.x
         y = current.y
-        #TOP
-        if ( y > 0 ) and not (self.cells[current.id - self.rows].walls & CELL_VISITED):
-            neighbours.append(self.cells[current.id  - self.rows ])
-        
-        #RIGHT
-        if ( x < self.rows -1 ) and not (self.cells[current.id + 1].walls & CELL_VISITED):
-            neighbours.append(self.cells[current.id + 1 ])
+        # TOP
+        if (y > 0) and not (self.cells[current.id - self.rows].walls & CELL_VISITED):
+            neighbours.append(self.cells[current.id - self.rows])
 
-        #BOTTOM
-        if ( y < (self.cols - 1) ) and not (self.cells[current.id + self.rows].walls & CELL_VISITED):
-            neighbours.append(self.cells[current.id  + self.rows ])
+        # RIGHT
+        if (x < self.rows - 1) and not (self.cells[current.id + 1].walls & CELL_VISITED):
+            neighbours.append(self.cells[current.id + 1])
 
-        #LEFT
-        if ( x > 0 ) and not (self.cells[current.id - 1].walls & CELL_VISITED):
-            neighbours.append(self.cells[current.id - 1 ])
-        
+        # BOTTOM
+        if (y < (self.cols - 1)) and not (self.cells[current.id + self.rows].walls & CELL_VISITED):
+            neighbours.append(self.cells[current.id  + self.rows])
+
+        # LEFT
+        if (x > 0) and not (self.cells[current.id - 1].walls & CELL_VISITED):
+            neighbours.append(self.cells[current.id - 1])
+
         return neighbours
-        
 
     def generate(self):
         while(len(self.stack) > 0):
             current = self.stack.pop()
             
-            #check for unvisited neighbours of the current cell
+            # check for unvisited neighbours of the current cell
             neighbours = self.check_neighbours(current)
 
 
-            if(len(neighbours) > 0):
-                #push the current cell on to the stack
+            if (len(neighbours) > 0):
+                # push the current cell on to the stack
                 self.stack.append(current)
-                #chose one of the unvisited neighbours
+                # chose one of the unvisited neighbours
                 visit = random.choice(neighbours)
 
-                #remove the wall between current and currently visited cell
+                # emove the wall between current and currently visited cell
                 diff = visit.id - current.id
 
-                #TOP
+                # TOP
                 if (diff == -self.rows):
                     self.cells[current.id].walls &= ~WALL_TOP
                     self.cells[visit.id].walls &= ~WALL_BOTTOM
-                #RIGHT
+                # RIGHT
                 elif (diff == 1):
                     self.cells[current.id].walls &= ~WALL_RIGHT
                     self.cells[visit.id].walls &= ~WALL_LEFT
-                #BOTTOM
+                # BOTTOM
                 elif (diff == self.rows):
                     self.cells[current.id].walls &= ~WALL_BOTTOM
                     self.cells[visit.id].walls &= ~WALL_TOP
-                #LEFT
+                # LEFT
                 elif (diff == -1):
                     self.cells[current.id].walls &= ~WALL_LEFT
                     self.cells[visit.id].walls &= ~WALL_RIGHT
@@ -110,88 +98,83 @@ class Maze():
                     print("OOPSIE!!")
                     return
 
-                #mark the chosen cell as visited and push the cell on to the stack
+                # mark the chosen cell as visited and push the cell on to the stack
                 self.cells[visit.id].walls |=CELL_VISITED
-                self.stack.append(visit)    
+                self.stack.append(visit)
 
-
-#-----------------------HELPERS
+# -----------------------HELPERS
     def reset_visit_flag(self):
         for i in range(0, len(self.cells)):
-            self.cells[i].walls &= ~CELL_VISITED; 
+            self.cells[i].walls &= ~CELL_VISITED
 
     def get_cells(self):
         return self.cells
 
+# --------------------BFS SHORTEST PATH SEARCH 
+    def randomize_endpoints(self):   # selects start and endpoint randomly
+        # start cell index
+        s_c = self.start
 
-#--------------------BFS SHORTEST PATH SEARCH 
-    def randomize_endpoints(self): #selects start and endpoint randomly
-        #start cell index
-            s_c = 0 
-        #goal cell index
-            g_c = random.randint(int((len(self.cells)/4) * 3), len(self.cells)-1)
+        # goal cell index
+        g_c = random.randint(int((len(self.cells)/4) * 3), len(self.cells)-1)
 
-            self.cells[s_c].walls |= CELL_IS_START
-            self.cells[g_c].walls |= CELL_IS_GOAL
+        self.cells[s_c].walls |= CELL_IS_START
+        self.cells[g_c].walls |= CELL_IS_GOAL
 
-            return(s_c, g_c)
-
+        return(s_c, g_c)
 
     def find_bfs_neighbours(self, current):
         x = current.x
         y = current.y
         neighbours = []
 
-        #TOP
+        # TOP
         if ( y > 0 ) and not((self.cells[current.id - self.rows].walls & WALL_BOTTOM) or (current.walls & WALL_TOP)):
             neighbours.append(self.cells[current.id  - self.rows ])
             
-        #RIGHT
-        if ( x < self.rows -1 ) and not((self.cells[current.id + 1].walls & WALL_LEFT) or (current.walls & WALL_RIGHT)):
+        # RIGHT
+        if (x < self.rows - 1) and not((self.cells[current.id + 1].walls & WALL_LEFT) or (current.walls & WALL_RIGHT)):
             neighbours.append(self.cells[current.id + 1 ])
 
-        #BOTTOM
-        if ( y < (self.cols - 1) ) and not((self.cells[current.id + self.rows].walls & WALL_TOP) or (current.walls & WALL_BOTTOM)):
+        # BOTTOM
+        if (y < (self.cols - 1)) and not((self.cells[current.id + self.rows].walls & WALL_TOP) or (current.walls & WALL_BOTTOM)):
             neighbours.append(self.cells[current.id  + self.rows ])
 
-        #LEFT
-        if ( x > 0 ) and not((self.cells[current.id - 1].walls & WALL_RIGHT) or (current.walls & WALL_LEFT)):
-            neighbours.append(self.cells[current.id - 1 ])
+        # LEFT
+        if (x > 0) and not((self.cells[current.id - 1].walls & WALL_RIGHT) or (current.walls & WALL_LEFT)):
+            neighbours.append(self.cells[current.id - 1])
 
         return neighbours
 
-    def find_path(self): #TO EDIT!
+    def find_path(self):   # TO EDIT!
         s_c, g_c = self.randomize_endpoints()
         start = self.cells[s_c]
         goal = self.cells[g_c]
-        queue = deque()
+        queue = []
         searched = []
         backtrace = {}
 
-        queue.append(start.id)
+        queue = [start.id]
 
         while(queue):
-            current = queue.popleft() #FIFO
+            current = queue.pop(0)   # FIFO
 
-            if(current== goal.id):
+            if(current == goal.id):
                 break
 
             neighbours = self.find_bfs_neighbours(self.cells[current])
 
             for i in range(0, len(neighbours)):
                 check = neighbours[i].id
-                
-                if(not check in searched):
+
+                if (check not in searched):
                     searched.append(check)
                     backtrace[check] = current
                     queue.append(check)
 
-        
             #print("Current: " + str(current))
             #print("Neighbours: " + str([neighbour.id for neighbour in neighbours]))
-        
-        
-        if(current == goal.id):
+        if (current == goal.id):
             path = [goal.id]
             current = goal.id
 
@@ -203,7 +186,7 @@ class Maze():
                 self.cells[path[i]].walls |= CELL_BFS_PATH
                 self.cells[path[i]].bfs_step_num = str(i)
             return True
-            
+
         else:
             return False
-        
+# EoF
