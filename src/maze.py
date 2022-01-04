@@ -10,7 +10,7 @@ class Cell():
         self.walls = WALL_TOP + WALL_RIGHT + WALL_BOTTOM + WALL_LEFT + CELL_NOT_VISITED
         self.x = x  #x = id - (id // width) * width  np y = 93 - (93 /10 ) * 10 = 3 X -> COL NUMBER
         self.y = y  #y = id // maze_width - np x = 9 / 10 = 0  Y-> ROW NUMBER
-        self.bfs_visited = False
+        self.bfs_step_num = "x"
 
 
 class Maze():
@@ -199,9 +199,9 @@ class Maze():
                 current = backtrace[current]
                 path.insert(0, current)
 
-            for i in path:
-                self.cells[i].walls |= CELL_BFS_PATH
-                    
+            for i in range(0, len(path)):
+                self.cells[path[i]].walls |= CELL_BFS_PATH
+                self.cells[path[i]].bfs_step_num = str(i)
             return True
             
         else:
