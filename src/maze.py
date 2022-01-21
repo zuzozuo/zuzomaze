@@ -22,27 +22,6 @@ class Maze():
             walls = str(bin(cell.walls))
             print("id: {} x: {} y: {} wall: {}".format(cell.id, cell.x, cell.y, walls))
 
-# ------------- BINARY PREVIEW OF GENERATED MAZE - WITHOUT BFS!
-    def display_maze(self):
-
-        current = self.cells[0].id
-
-        for y in range(self.cols):
-            row = [''] * 2
-
-            for x in range(self.rows):
-                cell = self.cells[current + x]
-                row[0] += '00' if (cell.walls & W_TOP) else '01'
-                row[1] += '01' if (cell.walls & W_LEFT) else '11'
-
-            current += self.rows
-            [self.finished_maze.append((str + '0')) for str in row]
-
-        self.finished_maze.append('0' * (self.rows * 2 + 1))
-
-        for line in self.finished_maze:
-            print(line)
-
 # ------------- REVERSE BACKTRACKING MAZE GENERATION
     def check_neighbours(self, current):
         neighbours = []
@@ -80,7 +59,7 @@ class Maze():
                 # chose one of the unvisited neighbours
                 visit = random.choice(neighbours)
 
-                # emove the wall between current and currently visited cell
+                # remove the wall between current and currently visited cell
                 diff = visit.id - current.id
 
                 # TOP
