@@ -1,6 +1,6 @@
 import random
 from cell import Cell
-from consts import (CELL_SIZE, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
+from consts import (CELL_SIZE, D_TOP, D_RIGHT, D_BOTTOM, D_LEFT,  W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
                     CELL_VISITED, CELL_START, CELL_GOAL, CELL_PATH)
 
 
@@ -96,7 +96,8 @@ class Maze():
         s_c = self.start
 
         # goal cell index
-        g_c = random.randint(int((len(self.cells)/2)), len(self.cells)-1)
+        # g_c = random.randint(int((len(self.cells)/2)), len(self.cells)-1)
+        g_c = len(self.cells)-1 # assigning goal as last cell in the maze 
 
         self.cells[s_c].walls |= CELL_START
         self.cells[g_c].walls |= CELL_GOAL
@@ -172,4 +173,33 @@ class Maze():
 
         else:
             return False
+
+#  ------- ZUZOGEON HELPERS
+
+    def add_door_randomly(self):
+        door_q = random.randint(int(len(self.cells)/5)+1, int(len(self.cells)/2)-1) # door quantity - how many doors we want in our map?
+        rand_cell_id = [random.randint(0, len(self.cells)-1) for x in range (0,door_q) ] # indexes  of random  cells that we want to edit
+
+        while len(set(rand_cell_id)) != door_q:
+            rand_cell_id.append(random.randint(0, len(self.cells)-1))
+
+        rand_cell_id = set(rand_cell_id)
+
+
+        for x in rand_cell_id:
+            if not (self.cells[x].walls & W_TOP) and (random.random() < 0.5):
+                self.cells[x].door |= D_TOP
+
+            if not (self.cells[x].walls & W_RIGHT) and (random.random() < 0.5):
+                self.cells[x].door |= D_RIGHT
+
+            if not (self.cells[x].walls & W_BOTTOM) and (random.random() < 0.5):
+                self.cells[x].door |= D_BOTTOM
+
+            if not (self.cells[x].walls & W_LEFT) and (random.random() < 0.5):
+                self.cells[x].door |= D_LEFT
+
+
+
+
 # EoF

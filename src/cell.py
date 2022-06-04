@@ -6,6 +6,7 @@ class Cell():
         self.size = size  # size for drawing imgs
         self.id = id
         self.walls = W_TOP | W_RIGHT | W_BOTTOM | W_LEFT | CELL_NOT_VISITED
+        self.door = 0b00000000
 
     # x = id - (id // width) * width : y = 93 - (93 /10 ) * 10 = 3 X -> COL NUM
         self.x = x

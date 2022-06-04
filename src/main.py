@@ -1,6 +1,7 @@
-from consts import (MAZE_WIDTH, MAZE_HEIGHT, CELL_SIZE, IMG_MARGIN, FONT_SIZE,
+from consts import (C_RED, MAZE_WIDTH, MAZE_HEIGHT, CELL_SIZE, IMG_MARGIN, FONT_SIZE,
                     CELL_GOAL, CELL_START, CELL_PATH, C_NORMAL, C_ENDPOINT,
-                    C_BLACK, C_VISITED_2, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT)
+                    C_BLACK, C_VISITED_2, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, D_TOP,
+                    D_BOTTOM, D_RIGHT, D_LEFT)
 from maze import Maze
 from PIL import Image, ImageDraw, ImageFont
 import random, string
@@ -34,6 +35,7 @@ def draw_image(cells, rows, cols, name):
             else:
                 draw.rectangle([(x, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_NORMAL)
 
+            # DRAWING WALL LINES
             if (cell.walls & W_TOP):
                 draw.line([(x, y), (x + CELL_SIZE, y)])
 
@@ -45,6 +47,19 @@ def draw_image(cells, rows, cols, name):
 
             if (cell.walls & W_LEFT):
                 draw.line([(x, y), (x, y + CELL_SIZE)])
+
+            #DRAWING DOOR LINES
+            if (cell.door & D_TOP):
+                draw.line([(x, y), (x + CELL_SIZE, y)], fill=C_RED)
+
+            if (cell.door & D_RIGHT):
+                draw.line([(x + CELL_SIZE, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_RED)
+
+            if (cell.door & D_BOTTOM):
+                draw.line([(x, y + CELL_SIZE), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_RED)
+
+            if (cell.door & D_LEFT):
+                draw.line([(x, y), (x, y + CELL_SIZE)], fill=C_RED)
 
             x += CELL_SIZE
         curr_pos += rows
@@ -69,6 +84,7 @@ print("################################################")
 
 aMAZEing = Maze(MAZE_WIDTH, MAZE_HEIGHT, 0)
 aMAZEing.generate()
+aMAZEing.add_door_randomly()
 aMAZEing.find_path()
 cells = aMAZEing.get_cells()
 
