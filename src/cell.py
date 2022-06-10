@@ -18,6 +18,7 @@ class Cell():
         self.monsters = 0
         self.treasure_chest = 0
         self.non_interactive = []
+        self.interactive = []
 
     
 

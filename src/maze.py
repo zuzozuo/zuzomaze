@@ -50,6 +50,7 @@ class Maze():
         return neighbours
 
     def generate(self):
+        self.cells[0].walls |= CELL_VISITED
         while(len(self.stack) > 0):
             current = self.stack.pop()
 
@@ -235,6 +236,13 @@ class Maze():
         for x in range(0, len(self.cells)):
             q = random.randint(1, len(non_int_obj)-1)
             self.cells[x].non_interactive = [non_int_obj[random.randint(0, len(non_int_obj)-1)] for _ in range(0, q)]
+    
+    def add_interactive_objects(self):
+        int_obj = ["hp_potion", "mp_potion", "sword"]
+
+        for x in range(0, len(self.cells)):
+            q = random.randint(1, len(int_obj)-1)
+            self.cells[x].interactive = [int_obj[random.randint(0, len(int_obj)-1)] for _ in range(0, q)]
         
     
     def add_door_key(self):
@@ -361,6 +369,7 @@ class Maze():
                 "key": c.door_key,
                 "monsters": c.monsters,
                 "non_inter": c.non_interactive,
+                "inter": c.interactive,
                 "door" : door,
                 "walls": walls
             }
