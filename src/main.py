@@ -1,4 +1,4 @@
-from consts import (C_RED, MAZE_WIDTH, MAZE_HEIGHT, CELL_SIZE, IMG_MARGIN, FONT_SIZE,
+from consts import (C_DOOR, C_RED, MAZE_WIDTH, MAZE_HEIGHT, CELL_SIZE, IMG_MARGIN, FONT_SIZE,
                     CELL_GOAL, CELL_START, CELL_PATH, C_NORMAL, C_ENDPOINT,
                     C_BLACK, C_VISITED_2, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, D_TOP,
                     D_BOTTOM, D_RIGHT, D_LEFT)
@@ -26,26 +26,31 @@ def draw_image(cells, rows, cols, name):
 
             if(cell.walls & CELL_START) | (cell.walls & CELL_GOAL):
                 draw.rectangle([(x, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_ENDPOINT)
-                draw.text((x_txt, y_txt), str(cell.bfs_step_num), fill=C_BLACK, font=txt_font)
+                #draw.text((x_txt, y_txt), str(cell.bfs_step_num), fill=C_BLACK, font=txt_font)
+                draw.text((x_txt, y_txt), str(cell.id), fill=C_BLACK, font=txt_font)
 
             elif (cell.walls & CELL_PATH):
                 draw.rectangle([(x, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_VISITED_2)
-
-                draw.text((x_txt, y_txt), str(cell.bfs_step_num), fill=C_BLACK, font=txt_font)
+                #draw.text((x_txt, y_txt), str(cell.bfs_step_num), fill=C_BLACK, font=txt_font)
+                draw.text((x_txt, y_txt), str(cell.id), fill=C_BLACK, font=txt_font)
+            
+            # elif cell.door_key:
+            #     draw.rectangle([(x, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_BLACK)
             else:
                 draw.rectangle([(x, y), (x + CELL_SIZE, y + CELL_SIZE)], fill=C_NORMAL)
+                draw.text((x_txt, y_txt), str(cell.id), fill=C_BLACK, font=txt_font)
 
             # DRAWING WALL LINES
-            if (cell.walls & W_TOP):
+            if (cell.walls & W_TOP) and not (cell.door & D_TOP):
                 draw.line([(x, y), (x + CELL_SIZE, y)])
 
-            if (cell.walls & W_RIGHT):
+            if (cell.walls & W_RIGHT) and not (cell.door & D_RIGHT):
                 draw.line([(x + CELL_SIZE, y), (x + CELL_SIZE, y + CELL_SIZE)])
 
-            if (cell.walls & W_BOTTOM):
+            if (cell.walls & W_BOTTOM) and not (cell.door & D_BOTTOM):
                 draw.line([(x, y + CELL_SIZE), (x + CELL_SIZE, y + CELL_SIZE)])
 
-            if (cell.walls & W_LEFT):
+            if (cell.walls & W_LEFT) and not (cell.door & D_LEFT):
                 draw.line([(x, y), (x, y + CELL_SIZE)])
 
             #DRAWING DOOR LINES
@@ -60,7 +65,7 @@ def draw_image(cells, rows, cols, name):
 
             if (cell.door & D_LEFT):
                 draw.line([(x, y), (x, y + CELL_SIZE)], fill=C_RED)
-
+            
             x += CELL_SIZE
         curr_pos += rows
         x = IMG_MARGIN
@@ -68,6 +73,14 @@ def draw_image(cells, rows, cols, name):
 
     img.show()
     img.save(name + "_maze.png")
+
+# ======
+
+def export_json_to_file(name, json):
+    file = open(name + ".json", 'w+')
+    file.write(json)
+    file.close()
+
 
 # -------------------------------------------------------
 # ----------------- MAIN
@@ -84,11 +97,15 @@ print("################################################")
 
 aMAZEing = Maze(MAZE_WIDTH, MAZE_HEIGHT, 0)
 aMAZEing.generate()
-aMAZEing.add_door_randomly()
 aMAZEing.find_path()
+aMAZEing.add_door_randomly()
+aMAZEing.add_door_key()
+aMAZEing.add_entities_randomly()
+aMAZEing.add_non_interactive_objects()
 cells = aMAZEing.get_cells()
 
 random_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 7))  
 draw_image(cells, MAZE_WIDTH, MAZE_HEIGHT, random_name)
+export_json_to_file("map", aMAZEing.generate_json())
 
 # EoF
