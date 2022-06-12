@@ -49,8 +49,25 @@ class Maze():
 
         return neighbours
 
+    def add_walls_on_boundries(self):
+        for i in range(0, len(self.cells)):
+            if(self.cells[i].x == 0):
+                self.cells[i].walls |= W_LEFT
+            
+            if (self.cells[i].x == self.rows):
+                self.cells[i].walls |= W_RIGHT
+            
+            if (self.cells[i].y == 0):
+                self.cells[i].walls |= W_TOP
+            
+            if (self.cells[i].y == self.cols):
+                self.cells[i].walls |= W_BOTTOM
+
+
     def generate(self):
         self.cells[0].walls |= CELL_VISITED
+        self.add_walls_on_boundries()
+        
         while(len(self.stack) > 0):
             current = self.stack.pop()
 
@@ -376,9 +393,9 @@ class Maze():
 
             map.append(cell_dict)
 
-        map_dict = {"map": map }
+        # map_dict = {"map": map }
 
-        return json.dumps(map_dict)
+        return json.dumps(map)
     
 
             

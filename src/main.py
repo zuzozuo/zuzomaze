@@ -102,6 +102,7 @@ aMAZEing.add_door_randomly()
 aMAZEing.add_door_key()
 aMAZEing.add_entities_randomly()
 aMAZEing.add_non_interactive_objects()
+aMAZEing.add_interactive_objects()
 cells = aMAZEing.get_cells()
 
 random_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 7))  
