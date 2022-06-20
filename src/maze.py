@@ -2,7 +2,7 @@ import random
 import json
 from random import random as rnd
 from cell import Cell
-from consts import (CELL_SIZE, D_TOP, D_RIGHT, D_BOTTOM, D_LEFT,  W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
+from consts import (CELL_SIZE, D_TOP, D_RIGHT, D_BOTTOM, D_LEFT, MAZE_HEIGHT, MAZE_WIDTH,  W_TOP, W_RIGHT, W_BOTTOM, W_LEFT,
                     CELL_VISITED, CELL_START, CELL_GOAL, CELL_PATH)
 
 
@@ -202,7 +202,6 @@ class Maze():
     def add_door_randomly(self):
         door_q = random.randint(int(len(self.cells)/5)+1, int(len(self.cells)/2)-1) # door quantity - how many doors we want in our map?
         rand_cell_id = [random.randint(1, len(self.cells)-1) for x in range (0,door_q) ] # indexes  of random  cells that we want to edit
-
         while len(set(rand_cell_id)) != door_q:
             rand_cell_id.append(random.randint(1, len(self.cells)-1))
 
@@ -223,13 +222,14 @@ class Maze():
             if (c.x > 0) and not (c.walls & W_LEFT) and (rnd() < 0.5) and not (self.cells[x-1].door & D_RIGHT):
                 c.door |= D_LEFT
 
-            c.door_key = 1
     
     def add_entities_randomly(self):  # temporary function
         monsters_q = random.randint(int(len(self.cells)/5)+1, int(len(self.cells)/2)-1)
         treasure_chest_q = random.randint(int(len(self.cells)/5)+1, int(len(self.cells)/2)-1)
         rand_m_c_id = [random.randint(1, len(self.cells)-1) for x in range (0,monsters_q) ]
         rand_tc_c_id = [random.randint(1, len(self.cells)-1) for x in range (0,treasure_chest_q) ]
+        monster_names = ["skeleton", "slime", "random", "ghost"]
+        monster_type_in_room = random.randint(1,len(monster_names))
 
         while len(set(rand_m_c_id)) != monsters_q :
             rand_m_c_id.append(random.randint(1, len(self.cells)-1))
@@ -241,8 +241,7 @@ class Maze():
         rand_tc_c_id = set(rand_tc_c_id)
         
         for id in rand_m_c_id:
-            self.cells[id].monsters = 1
-        
+            self.cells[id].monsters = [monster_names[random.randint(0,len(monster_names)-1)] for x in range(0, monster_type_in_room)]        
         for id in rand_tc_c_id:
             self.cells[id].treasure_chest = 1
 
@@ -262,51 +261,29 @@ class Maze():
             self.cells[x].interactive = [int_obj[random.randint(0, len(int_obj)-1)] for _ in range(0, q)]
         
     
-    def add_door_key(self):
+    def add_door_key_randomly(self):
         door_cells = [c for c in self.cells if c.door]
+        key_q = 10
 
         for d in door_cells:
-            print("cell:  " + str(d.id)) 
-            print("door:  " + str(format(d.door,'08b')))
-            print("walls: " + str(format(d.walls,'08b')) + "\n")
-            id = d.id
-            x = d.x
-            y = d.y
-            # TODO zrob to kurwa w koncu debilu
-            # # CHECK TOP
-            # if (d.door & D_TOP) and (y > 0):
-            #     self.cells[id-self.rows].door_key = 1
+            if(d.door & D_TOP):
+                key_q += 1
+            if(d.door & D_RIGHT):
+                key_q += 1
+            if(d.door & D_BOTTOM):
+                key_q += 1
+            if(d.door & D_LEFT):
+                key_q += 1
         
-            # CHECK RIGHT
-            if (d.door & D_RIGHT) and (d.x < self.rows - 1) and (d.walls & W_LEFT):
-                self.cells[id-1].door_key = 1
-            elif (d.door & D_RIGHT) and (d.x < self.rows - 1):
-                pass
-            # # CHECK BOTTOM
-            # if (d.door & D_BOTTOM) and (d.y < (self.cols - 1)):
-            #     self.cells[id+ self.rows].door_key = 1
-            # # CHECK LEFT
-            # if (d.door & D_LEFT) and (d.x > 0):
-            #     self.cells[id-1].door_key = 1
+        rand_cell_id = [random.randint(1, len(self.cells)-1) for x in range (0,key_q) ] # indexes  of random  cells that we want to edit
+        while len(set(rand_cell_id)) != key_q:
+            rand_cell_id.append(random.randint(1, len(self.cells)-1))
 
-        # neighbours = self.find_door_neighbours()
+        rand_cell_id = set(rand_cell_id)
 
-        # # for x in self.path:
-        # #     if x in neighbours:
-        # #         neighbours.remove(x)
+        for c in rand_cell_id:
+            self.cells[c].door_key = True
 
-        # # FOR CELLS IN PATH 
-        # if [0, 1, 10] in self.path:
-        #     self.cells[0].door_key = 1
-
-        # for x in range(1, len(self.path)):
-        #     if self.cells[self.path[x]].door:
-        #         self.cells[self.path[x - 1]].door_key = 1
-        
-        # FOR CELLS NOT IN PATH - looking for neighbours 
-        # for x in temp:
-        #     self.cells[x].door_key = 1
-        
 
     def find_door_neighbours(self):
         door_cells = [c for c in self.cells if c.door]
@@ -337,7 +314,7 @@ class Maze():
             
         return neighbours
     
-    def generate_json(self):
+    def generate_map_json(self):
         map =[]
 
         for c in self.cells:
@@ -385,17 +362,24 @@ class Maze():
                 "y": c.y,
                 "key": c.door_key,
                 "monsters": c.monsters,
-                "non_inter": c.non_interactive,
-                "inter": c.interactive,
+                "non_inter": [] ,# c.non_interactive,
+                "inter": [], # c.interactive,
                 "door" : door,
                 "walls": walls
             }
 
             map.append(cell_dict)
 
-        # map_dict = {"map": map }
-
         return json.dumps(map)
+
+    def generate_map_details_json(self):
+        
+        return json.dumps({
+            "width": MAZE_WIDTH,
+            "height": MAZE_HEIGHT,
+            "start": self.cells[0].id,
+            "end": self.cells[len(self.cells)-1].id
+            })
     
 
             

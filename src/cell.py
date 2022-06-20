@@ -14,8 +14,8 @@ class Cell():
 
         # GAME FIELDS
         self.door = 0b00000000
-        self.door_key = 0
-        self.monsters = 0
+        self.door_key = False
+        self.monsters = []
         self.treasure_chest = 0
         self.non_interactive = []
         self.interactive = []

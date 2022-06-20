@@ -95,18 +95,28 @@ print("#            It's aMAZEing  adventure!         #")
 print("################################################")
 
 
-aMAZEing = Maze(MAZE_WIDTH, MAZE_HEIGHT, 0)
-aMAZEing.generate()
-aMAZEing.find_path()
-aMAZEing.add_door_randomly()
-aMAZEing.add_door_key()
-aMAZEing.add_entities_randomly()
-aMAZEing.add_non_interactive_objects()
-aMAZEing.add_interactive_objects()
-cells = aMAZEing.get_cells()
-
 random_name = ''.join(random.choices(string.ascii_lowercase + string.digits, k = 7))  
-draw_image(cells, MAZE_WIDTH, MAZE_HEIGHT, random_name)
-export_json_to_file("map", aMAZEing.generate_json())
+
+# draw_image(cells, MAZE_WIDTH, MAZE_HEIGHT, random_name)
+# export_json_to_file("map", aMAZEing.generate_map_json())
+# export_json_to_file("results", aMAZEing.generate_map_details_json())
+
+for x in range(0, 10):
+    row = random.randint(MAZE_WIDTH, int(MAZE_WIDTH * 1.5))
+    col = random.randint(MAZE_HEIGHT, int(MAZE_HEIGHT * 1.5))
+    aMAZEing = Maze(row, col, 0)
+    aMAZEing.generate()
+    aMAZEing.find_path()
+    aMAZEing.add_door_randomly()
+    aMAZEing.add_door_key_randomly()
+    aMAZEing.add_entities_randomly()
+    aMAZEing.add_non_interactive_objects()
+    aMAZEing.add_interactive_objects()
+    cells = aMAZEing.get_cells()
+
+    draw_image(cells, row , col , "./maze_img/maze_"+str(x))
+    export_json_to_file("./json_maps/map_"+str(x), aMAZEing.generate_map_json())
+    export_json_to_file("./json_details/details_"+str(x), aMAZEing.generate_map_details_json())
+
 
 # EoF
