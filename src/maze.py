@@ -372,11 +372,11 @@ class Maze():
 
         return json.dumps(map)
 
-    def generate_map_details_json(self):
+    def generate_map_details_json(self, w, h):
         
         return json.dumps({
-            "width": MAZE_WIDTH,
-            "height": MAZE_HEIGHT,
+            "width": w,
+            "height": h,
             "start": self.cells[0].id,
             "end": self.cells[len(self.cells)-1].id
             })

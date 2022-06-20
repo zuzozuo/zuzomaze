@@ -114,9 +114,9 @@ for x in range(0, 10):
     aMAZEing.add_interactive_objects()
     cells = aMAZEing.get_cells()
 
-    draw_image(cells, row , col , "./maze_img/maze_"+str(x))
+    draw_image(cells, row , col , "./maze_img/" + str(x)+ "_")
     export_json_to_file("./json_maps/map_"+str(x), aMAZEing.generate_map_json())
-    export_json_to_file("./json_details/details_"+str(x), aMAZEing.generate_map_details_json())
+    export_json_to_file("./json_details/details_"+str(x), aMAZEing.generate_map_details_json(row, col))
 
 
 # EoF
