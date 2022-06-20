@@ -247,11 +247,11 @@ class Maze():
 
     
     def add_non_interactive_objects(self):
-        non_int_obj = ["fairy", "stone", "table", "vase", "chair", "painting", "flower"]
+        non_int_obj = ["stone", "water", "bat", "torch", "fire", "bones", "flowers", "bottle", "paper", "chain", "cuffs"]
 
         for x in range(0, len(self.cells)):
             q = random.randint(1, len(non_int_obj)-1)
-            self.cells[x].non_interactive = [non_int_obj[random.randint(0, len(non_int_obj)-1)] for _ in range(0, q)]
+            self.cells[x].non_interactive = list(set([non_int_obj[random.randint(0, len(non_int_obj)-1)] for _ in range(0, q)]))
     
     def add_interactive_objects(self):
         int_obj = ["hp_potion", "mp_potion", "sword"]
@@ -362,7 +362,7 @@ class Maze():
                 "y": c.y,
                 "key": c.door_key,
                 "monsters": c.monsters,
-                "non_inter": [] ,# c.non_interactive,
+                "non_inter": c.non_interactive ,# c.non_interactive,
                 "inter": [], # c.interactive,
                 "door" : door,
                 "walls": walls
