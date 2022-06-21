@@ -23,7 +23,8 @@ class Maze():
 
         for cell in self.cells:
             walls = str(bin(cell.walls))
-            print("id: {} x: {} y: {} wall: {}".format(cell.id, cell.x, cell.y, walls))
+            door = str(bin(cell.door))
+            print("id: {} x: {} y: {} wall: {} door: {} ".format(cell.id, cell.x, cell.y, walls, door))
 
 # ------------- REVERSE BACKTRACKING MAZE GENERATION
     def check_neighbours(self, current):
@@ -221,6 +222,7 @@ class Maze():
 
             if (c.x > 0) and not (c.walls & W_LEFT) and (rnd() < 0.5) and not (self.cells[x-1].door & D_RIGHT):
                 c.door |= D_LEFT
+        
 
     
     def add_entities_randomly(self):  # temporary function

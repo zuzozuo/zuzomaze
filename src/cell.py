@@ -1,4 +1,4 @@
-from consts import W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, CELL_NOT_VISITED
+from consts import NO_DOOR, D_TOP, D_RIGHT, D_BOTTOM, D_LEFT, W_TOP, W_RIGHT, W_BOTTOM, W_LEFT, CELL_NOT_VISITED
 
 
 class Cell():
@@ -13,7 +13,7 @@ class Cell():
         self.bfs_step_num = "x"
 
         # GAME FIELDS
-        self.door = 0b00000000
+        self.door = NO_DOOR
         self.door_key = False
         self.monsters = []
         self.treasure_chest = 0
